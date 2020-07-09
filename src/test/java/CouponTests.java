@@ -3,126 +3,127 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import java.time.Duration;
 
 public class CouponTests extends TestHelpers {
 
-TestHelpers testHelpers = new TestHelpers();
+    TestHelpers testHelpers = new TestHelpers();
 
-String addFirstProductToCartButtonLocator = ".//a[contains(text(), \"Dodaj do koszyka\")]";
-String priceInformationLocator = "a[class=\"cart-contents\"]>span";
-String cartContentButton = "a[class=\"cart-contents\"]";
-String couponInputLocator = "input[name=\"coupon_code\"]";
-String addCouponButtonLocator = "button[name=\"apply_coupon\"]";
-String cartContentTableLocator = "div[class=\"woocommerce-notices-wrapper\"]";
-String alertMassageTextLocator = "ul[class=\"woocommerce-error\"]";
+    String addFirstProductToCartButtonLocator = ".//a[contains(text(), \"Dodaj do koszyka\")]";
+    String priceInformationLocator = "a[class=\"cart-contents\"]>span";
+    String cartContentButtonLocator = "a[class=\"cart-contents\"]";
+    String couponInputLocator = "input[name=\"coupon_code\"]";
+    String addCouponButtonLocator = "button[name=\"apply_coupon\"]";
+    String cartContentTableLocator = "div[class=\"woocommerce-notices-wrapper\"]";
+    String alertMessageTextLocator = "ul[class=\"woocommerce-error\"]";
 
-public void addingProduct(){
-    //adding first available product to cart
-    driver.findElement(By.xpath(addFirstProductToCartButtonLocator)).click();
+    public void addingProduct() {
+        //adding first available product to cart
+        driver.findElement(By.xpath(addFirstProductToCartButtonLocator)).click();
 
-    //giving page time to refresh after adding products to cart
-    wait.until(ExpectedConditions.stalenessOf(driver.findElement(By.cssSelector(priceInformationLocator))));
+        //giving page time to refresh after adding products to cart
+        wait.until(ExpectedConditions.stalenessOf(driver.findElement(By.cssSelector(priceInformationLocator))));
 
-    //moving to cart page
-    driver.findElement(By.cssSelector(cartContentButton)).click();
-}
+        //moving to cart page
+        driver.findElement(By.cssSelector(cartContentButtonLocator)).click();
+    }
 
-@Test
-public void addingCorrectCoupon(){
-    testHelpers.driverSetUp();
-    testHelpers.closeInfoMassage();
+    @Test
+    public void addingCorrectCoupon() {
+        testHelpers.driverSetUp();
+        testHelpers.closeInfoMassage();
 
-    addingProduct();
-    String correctCoupon = "10procent";
+        addingProduct();
+        String correctCoupon = "10procent";
 
-    //typing coupon text
-    driver.findElement(By.cssSelector(couponInputLocator)).sendKeys(correctCoupon);
+        //typing coupon text
+        driver.findElement(By.cssSelector(couponInputLocator)).sendKeys(correctCoupon);
 
-    //adding coupon
-    driver.findElement(By.cssSelector(addCouponButtonLocator)).click();
+        //adding coupon
+        driver.findElement(By.cssSelector(addCouponButtonLocator)).click();
 
-    //giving page time to refresh after adding coupon
-    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector(cartContentTableLocator))));
+        //giving page time to refresh after adding coupon
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector(cartContentTableLocator))));
 
-    //alert massage
-    WebElement alertMassage = driver.findElement(By.cssSelector(cartContentTableLocator));
-    Assertions.assertTrue(alertMassage.getText().contains("Kupon został pomyślnie użyty"), "Coupon has not been added");
+        //alert massage
+        WebElement alertMessage = driver.findElement(By.cssSelector(cartContentTableLocator));
+        Assertions.assertTrue(alertMessage.getText().contains("Kupon został pomyślnie użyty"), "Coupon has not been added");
 
-    testHelpers.afterFinishedTest();
-}
+        testHelpers.afterFinishedTest();
+    }
 
-@Test
-public void addingIncorrectCouponTest(){
-    testHelpers.driverSetUp();
-    testHelpers.closeInfoMassage();
+    @Test
+    public void addingIncorrectCouponTest() {
+        testHelpers.driverSetUp();
+        testHelpers.closeInfoMassage();
 
-    addingProduct();
-    String incorrectCoupon = "100procent";
+        addingProduct();
+        String incorrectCoupon = "100procent";
 
-    //typing coupon text
-    driver.findElement(By.cssSelector(couponInputLocator)).sendKeys(incorrectCoupon);
+        //typing coupon text
+        driver.findElement(By.cssSelector(couponInputLocator)).sendKeys(incorrectCoupon);
 
-    //adding coupon
-    driver.findElement(By.cssSelector(addCouponButtonLocator)).click();
+        //adding coupon
+        driver.findElement(By.cssSelector(addCouponButtonLocator)).click();
 
-    //giving page time to refresh after adding coupon
-    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector(cartContentTableLocator))));
+        //giving page time to refresh after adding coupon
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector(cartContentTableLocator))));
 
-    //alert massage
-    WebElement alertMassage = driver.findElement(By.cssSelector(cartContentTableLocator));
-    Assertions.assertTrue(alertMassage.getText().contains("nie istnieje"), "Coupon was correct");
+        //alert massage
+        WebElement alertMessage = driver.findElement(By.cssSelector(cartContentTableLocator));
+        Assertions.assertTrue(alertMessage.getText().contains("nie istnieje"), "Coupon was correct");
 
-    testHelpers.afterFinishedTest();
-}
+        testHelpers.afterFinishedTest();
+    }
 
-@Test
-public void addingEmptyCouponTest(){
-    testHelpers.driverSetUp();
-    testHelpers.closeInfoMassage();
+    @Test
+    public void addingEmptyCouponTest() {
+        testHelpers.driverSetUp();
+        testHelpers.closeInfoMassage();
 
-    addingProduct();
+        addingProduct();
 
-    //adding coupon
-    driver.findElement(By.cssSelector(addCouponButtonLocator)).click();
+        //adding coupon
+        driver.findElement(By.cssSelector(addCouponButtonLocator)).click();
 
-    //giving page time to refresh after adding coupon
-    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector(cartContentTableLocator))));
+        //giving page time to refresh after adding coupon
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector(cartContentTableLocator))));
 
-    Assertions.assertTrue(driver.findElement(By.cssSelector(cartContentTableLocator)).getText().contains("Proszę wpisać kod kuponu"),
-            "Coupon has been entered");
+        Assertions.assertTrue(driver.findElement(By.cssSelector(cartContentTableLocator)).getText().contains("Proszę wpisać kod kuponu"),
+                "Coupon has been entered");
 
-    testHelpers.afterFinishedTest();
-}
+        testHelpers.afterFinishedTest();
+    }
 
-@Test
-public void addingCouponTwiceTest(){
-    testHelpers.driverSetUp();
-    testHelpers.closeInfoMassage();
+    @Test
+    public void addingCouponTwiceTest() {
+        testHelpers.driverSetUp();
+        testHelpers.closeInfoMassage();
 
-    addingProduct();
-    String correctCoupon = "10procent";
+        addingProduct();
+        String correctCoupon = "10procent";
 
-    //typing coupon text
-    driver.findElement(By.cssSelector(couponInputLocator)).sendKeys(correctCoupon);
+        //typing coupon text
+        driver.findElement(By.cssSelector(couponInputLocator)).sendKeys(correctCoupon);
 
-    //adding coupon
-    driver.findElement(By.cssSelector(addCouponButtonLocator)).click();
+        //adding coupon
+        driver.findElement(By.cssSelector(addCouponButtonLocator)).click();
 
-    //giving page time to refresh after adding coupon
-    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector(cartContentTableLocator))));
+        //giving page time to refresh after adding coupon
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector(cartContentTableLocator))));
 
-    //adding the same coupon once more
-    driver.findElement(By.cssSelector(couponInputLocator)).sendKeys(correctCoupon);
-    driver.findElement(By.cssSelector(addCouponButtonLocator)).click();
+        //adding the same coupon once more
+        driver.findElement(By.cssSelector(couponInputLocator)).sendKeys(correctCoupon);
+        driver.findElement(By.cssSelector(addCouponButtonLocator)).click();
 
-    wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(alertMassageTextLocator)));
-    wait.withTimeout(Duration.ofMillis(2000));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(alertMessageTextLocator)));
+        wait.withTimeout(Duration.ofMillis(2000));
 
-    //alert massage
-    WebElement alertMassage = driver.findElement(By.cssSelector(alertMassageTextLocator));
-    Assertions.assertTrue(alertMassage.getText().contains("Kupon został zastosowany"), "Coupon " + correctCoupon + " was not used twice");
+        //alert massage
+        WebElement alertMessage = driver.findElement(By.cssSelector(alertMessageTextLocator));
+        Assertions.assertTrue(alertMessage.getText().contains("Kupon został zastosowany"), "Coupon " + correctCoupon + " was not used twice");
 
-    testHelpers.afterFinishedTest();
-}
+        testHelpers.afterFinishedTest();
+    }
 }
